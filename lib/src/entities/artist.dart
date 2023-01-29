@@ -13,7 +13,7 @@ class ArtistEntity implements IterableEntity {
 
   @override
   String toString() {
-    return st.SEARCH_TYPE_ARTIST;
+    return st.searchTypeArtist;
   }
 }
 

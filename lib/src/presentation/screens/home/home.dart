@@ -24,61 +24,43 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _inputDebounceId = 'input-debounce';
-  String? _albumsViewCurrentSearch = null;
-  String? _artistsViewCurrentSearch = null;
+  String? _albumsViewCurrentSearch;
+  String? _artistsViewCurrentSearch;
 
   late final SpotifySearchCubit albumsCubit;
   late final SpotifySearchCubit artitsCubit;
   ViewTypes? _selectedView = ViewTypes.albums;
   String? userSearch;
-  bool albumsLoaded = false;
-  bool artistsLoaded = false;
 
   @override
   void initState() {
     albumsCubit = SpotifySearchCubit(
-      itemsKey: st.ITEMS_KEY_ALBUMS,
+      itemsKey: st.itemsKeyAlbums,
       searchType: AlbumEntity(),
     );
     artitsCubit = SpotifySearchCubit(
-      itemsKey: st.ITEMS_KEY_ARTISTS,
+      itemsKey: st.itemsKeyArtists,
       searchType: ArtistEntity(),
     );
     super.initState();
   }
 
-  void _setArtistsLoaded(bool isLoaded) {
-    setState(() {
-      artistsLoaded = isLoaded;
-    });
-  }
-
-  void _setAlbumsLoaded(bool isLoaded) {
-    setState(() {
-      albumsLoaded = isLoaded;
-    });
-  }
-
   void _onInputUpdated(String? input) {
     setState(() => userSearch = input);
-
-    if (input == null || input.isEmpty) {
-      setState(() => _selectedView == null);
-    } else {
-      // wait 500 seconds for user to finish typing before triggering search to prevent uneccary api calls
-      EasyDebounce.debounce(_inputDebounceId, const Duration(milliseconds: 500),
-          () {
-        _selectedView == ViewTypes.albums
-            ? albumsCubit.executeSearch(q: userSearch!)
-            : artitsCubit.executeSearch(q: userSearch!);
-      });
-    }
 
     if (_selectedView == ViewTypes.albums) {
       setState(() => _albumsViewCurrentSearch = input);
     } else if (_selectedView == ViewTypes.artists) {
       setState(() => _artistsViewCurrentSearch = input);
     }
+
+    // wait 500 seconds for user to finish typing before triggering search to prevent unnecessary api calls
+    EasyDebounce.debounce(_inputDebounceId, const Duration(milliseconds: 500),
+        () {
+      _selectedView == ViewTypes.albums
+          ? albumsCubit.executeSearch(q: userSearch!)
+          : artitsCubit.executeSearch(q: userSearch!);
+    });
   }
 
   void _onViewSelected(ViewTypes view) async {
@@ -111,25 +93,27 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const PagePadding.horizontalSymmetric(value: 10),
           child: CustomScrollView(
             slivers: [
-              const SliverToBoxAdapter(child: YSpaceBetween(space: 30)),
+              const SliverToBoxAdapter(child: YSpaceBetween(space: 10)),
               const SliverToBoxAdapter(
                 child: BoldText(
-                    text: "Search",
-                    color: Colors.white,
-                    size: 28,
-                    fontWeight: FontWeight.w700),
+                  text: stringSearch,
+                  color: Colors.white,
+                  size: 28,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -1,
+                ),
               ),
               const SliverToBoxAdapter(child: YSpaceBetween(space: 15)),
               SliverToBoxAdapter(
                 child: Stack(
                   children: [
                     TextInput(
-                      hintText: "Artists, albums...",
+                      hintText: stringSearchInputHint,
                       bgColor: Colors.white,
                       hintColor: Colors.grey.shade800,
                       textColor: Colors.grey.shade800,
                       fontSize: 13,
-                      textBoxPadding: 40,
+                      textBoxPadding: 35,
                       onChanged: _onInputUpdated,
                     ),
                     Positioned(
@@ -145,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               const SliverToBoxAdapter(child: YSpaceBetween(space: 25)),
-              if (isUserhasInput || (albumsLoaded || artistsLoaded))
+              if (isUserhasInput)
                 SliverToBoxAdapter(
                   child: Row(
                     children: [
@@ -164,26 +148,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               const SliverToBoxAdapter(child: YSpaceBetween(space: 25)),
-              if (_selectedView == ViewTypes.albums)
-                BlocConsumer<SpotifySearchCubit, SpotifySearchState>(
-                  bloc: albumsCubit,
-                  listener: (context, state) {
-                    _setAlbumsLoaded(state.items != null);
-                  },
-                  builder: (context, state) {
-                    return AlbumsViewComponent(albumsState: state);
-                  },
-                ),
-              if (_selectedView == ViewTypes.artists)
-                BlocConsumer<SpotifySearchCubit, SpotifySearchState>(
-                  bloc: artitsCubit,
-                  listener: (context, state) {
-                    _setArtistsLoaded(state.items != null);
-                  },
-                  builder: (context, state) {
-                    return ArtistsViewComponent(artistsState: state);
-                  },
-                ),
+              if (isUserhasInput && _selectedView == ViewTypes.albums)
+                AlbumsViewComponent(bloc: albumsCubit),
+              if (isUserhasInput && _selectedView == ViewTypes.artists)
+                ArtistsViewComponent(bloc: artitsCubit),
             ],
           ),
         ),

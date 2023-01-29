@@ -1,7 +1,6 @@
 import 'package:emoodie/src/entities/thumnail.dart';
 import 'package:flutter/material.dart';
 
-import 'library.dart';
 
 class PhotoItem extends StatelessWidget {
   final ThumbNailEntityItem photo;

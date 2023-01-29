@@ -14,7 +14,7 @@ class AlbumEntity implements IterableEntity {
 
   @override
   String toString() {
-    return st.SEARCH_TYPE_ALBUM;
+    return st.searchTypeAlbum;
   }
 }
 

@@ -18,7 +18,7 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
         _itemsKey = itemsKey,
         super(SpotifySearchState(loading: false));
 
-  void executeSearch({required String q, bool silent = false}) async {
+  void executeSearch({required String q}) async {
     emit(state.copyWith(loading: () => true, error: null));
     try {
       final response =
@@ -32,7 +32,7 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
       return;
     } on OAuthGrantException catch (e) {
       if (kDebugMode) Logging.out(e.message);
-      _errorState(st.ERROR_0AUTH2);
+      _errorState(st.error0Auth2);
     } catch (e) {
       if (kDebugMode) Logging.out(e.toString());
       _errorState(e.toString());
@@ -75,6 +75,6 @@ class SpotifySearchState {
 
   @override
   String toString() {
-    return " $error $loading";
+    return " $error $loading $items";
   }
 }
