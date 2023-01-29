@@ -1,4 +1,4 @@
-import 'package:emoodie/src/core/components/spaces.dart';
+import 'package:emoodie/src/core/components/library.dart';
 import 'package:emoodie/src/entities/artist.dart';
 import 'package:emoodie/src/presentation/cubits/spotify_search_cubit.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +28,18 @@ class ArtistsViewComponent extends StatelessWidget {
         (context, index) {
           ArtistEntityItem artist = artistsState.items![index];
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              YSpaceBetween(space: 6),
-              Container(
-                alignment: Alignment.center,
-                color: Colors.teal,
-                child: Text(artist.artistName!),
-              ),
-              YSpaceBetween(space: 6),
+              const YSpaceBetween(),
+              Row(children: [
+                CircleAvatar(
+                  radius: 24,
+                  backgroundImage: NetworkImage(artist.thumNail640?.url ?? ""),
+                ),
+                const XSpaceBetween(space: 12),
+                BoldText.medium(artist.artistName!, color: Colors.white),
+              ]),
+              const YSpaceBetween(),
             ],
           );
         },

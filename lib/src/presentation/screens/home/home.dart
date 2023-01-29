@@ -4,6 +4,7 @@ import 'package:emoodie/src/entities/album.dart';
 import 'package:emoodie/src/entities/artist.dart';
 import 'package:emoodie/src/presentation/cubits/spotify_search_cubit.dart';
 
+import 'package:emoodie/src/core/utils/library.dart';
 import 'package:emoodie/src/core/utils/constants.dart' as st;
 import 'package:emoodie/src/presentation/screens/home/components/library.dart';
 
@@ -22,7 +23,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _input_debounce_id = 'input-debounce';
+  final _inputDebounceId = 'input-debounce';
+  String? _albumsViewCurrentSearch = null;
+  String? _artistsViewCurrentSearch = null;
 
   late final SpotifySearchCubit albumsCubit;
   late final SpotifySearchCubit artitsCubit;
@@ -63,12 +66,18 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() => _selectedView == null);
     } else {
       // wait 500 seconds for user to finish typing before triggering search to prevent uneccary api calls
-      EasyDebounce.debounce(
-          _input_debounce_id, const Duration(milliseconds: 500), () {
+      EasyDebounce.debounce(_inputDebounceId, const Duration(milliseconds: 500),
+          () {
         _selectedView == ViewTypes.albums
             ? albumsCubit.executeSearch(q: userSearch!)
             : artitsCubit.executeSearch(q: userSearch!);
       });
+    }
+
+    if (_selectedView == ViewTypes.albums) {
+      setState(() => _albumsViewCurrentSearch = input);
+    } else if (_selectedView == ViewTypes.artists) {
+      setState(() => _artistsViewCurrentSearch = input);
     }
   }
 
@@ -78,10 +87,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     if (userSearch != null) {
-      if (!albumsLoaded && view == ViewTypes.albums) {
+      // If view type is equals and user input has changed between view switches.
+      // If user input has not changed between view type switch, no need to trigger search again
+      if (_albumsViewCurrentSearch != userSearch && view == ViewTypes.albums) {
+        _albumsViewCurrentSearch = userSearch;
         albumsCubit.executeSearch(q: userSearch!);
-      }
-      if (!artistsLoaded && view == ViewTypes.artists) {
+      } else if (_artistsViewCurrentSearch != userSearch &&
+          view == ViewTypes.artists) {
+        _artistsViewCurrentSearch = userSearch;
         artitsCubit.executeSearch(q: userSearch!);
       }
     }
@@ -138,13 +151,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       SelectorChip(
                         isActive: _selectedView == ViewTypes.albums,
-                        text: ViewTypes.albums.name,
+                        text: ViewTypes.albums.name.capitalized(),
                         onSelect: () => _onViewSelected(ViewTypes.albums),
                       ),
                       const XSpaceBetween(space: 17),
                       SelectorChip(
                         isActive: _selectedView == ViewTypes.artists,
-                        text: ViewTypes.artists.name,
+                        text: ViewTypes.artists.name.capitalized(),
                         onSelect: () => _onViewSelected(ViewTypes.artists),
                       ),
                     ],
@@ -183,6 +196,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
     albumsCubit.close();
     artitsCubit.close();
-    EasyDebounce.cancel(_input_debounce_id);
+    EasyDebounce.cancel(_inputDebounceId);
   }
 }

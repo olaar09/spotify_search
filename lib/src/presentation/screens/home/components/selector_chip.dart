@@ -46,7 +46,7 @@ class _SelectorChipState extends State<SelectorChip> {
         ),
         child: BoldText(
           text: widget.text,
-          size: 13,
+          size: 12,
           color: Colors.white,
           fontWeight: FontWeight.w400,
           letterSpacing: .1,

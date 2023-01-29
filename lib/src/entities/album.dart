@@ -1,4 +1,5 @@
 import 'package:emoodie/src/core/utils/iterable_entity_interface.dart';
+import 'package:emoodie/src/entities/artist.dart';
 import 'package:emoodie/src/entities/thumnail.dart';
 import 'package:emoodie/src/core/utils/constants.dart' as st;
 
@@ -20,6 +21,7 @@ class AlbumEntity implements IterableEntity {
 class AlbumEntityItem {
   String? albumName;
   String? albumType;
+  List artists;
   ThumbNailEntityItem? thumNail640;
   String? releaseDate;
   int? totalTracks;
@@ -28,6 +30,7 @@ class AlbumEntityItem {
     required this.albumName,
     required this.albumType,
     this.thumNail640,
+    required this.artists,
     required this.releaseDate,
     required this.totalTracks,
   });
@@ -35,6 +38,7 @@ class AlbumEntityItem {
   factory AlbumEntityItem.fromJson(Map<dynamic, dynamic> map) {
     List? images = map['images'];
     return AlbumEntityItem.setData(
+      artists: ArtistEntity().fromJsonArr(map['artists']),
       albumName: map['name'],
       albumType: map['album_type'],
       thumNail640: images == null || images.isEmpty

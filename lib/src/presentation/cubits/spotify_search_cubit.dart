@@ -24,7 +24,10 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
       final response =
           await OAuth2Client.get("/search?type=${_searchType.toString()}&q=$q");
       final data = jsonDecode(response.body);
-      final items = _searchType.fromJsonArr(data[_itemsKey]['items']);
+      final getWithItemKey = data[_itemsKey];
+      final items = getWithItemKey == null
+          ? []
+          : _searchType.fromJsonArr(getWithItemKey['items']);
       _loadedState(items);
       return;
     } on OAuthGrantException catch (e) {

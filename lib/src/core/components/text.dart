@@ -21,7 +21,10 @@ class BoldText extends StatelessWidget {
   }) : super(key: key);
 
   factory BoldText.smaller(String text,
-      {Color? color, TextAlign? align, FontWeight? fontWeight, int? maxLines}) {
+      {Color? color,
+      TextAlign? align,
+      FontWeight? fontWeight = FontWeight.w600,
+      int? maxLines}) {
     return BoldText(
       text: text,
       size: 12,
@@ -63,7 +66,7 @@ class BoldText extends StatelessWidget {
       {Color? color, FontWeight? fontWeight, TextAlign? align}) {
     return BoldText(
       text: text,
-      size: 16,
+      size: 13,
       color: color,
       fontWeight: fontWeight,
       align: align,
@@ -72,7 +75,9 @@ class BoldText extends StatelessWidget {
   }
 
   factory BoldText.medium(String text,
-      {Color? color, FontWeight? fontWeight, TextAlign? align}) {
+      {Color? color,
+      FontWeight? fontWeight = FontWeight.w500,
+      TextAlign? align}) {
     return BoldText(
       text: text,
       size: 14,
@@ -166,7 +171,7 @@ class BoldText extends StatelessWidget {
         letterSpacing: letterSpacing,
         fontWeight: fontWeight ?? FontWeight.w900,
         fontSize: size ?? 20,
-        color: color ?? Colors.grey.shade800,
+        color: color ?? Colors.grey.shade500,
         overflow: TextOverflow.ellipsis,
       ),
     );
