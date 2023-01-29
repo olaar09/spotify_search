@@ -9,7 +9,6 @@ import 'package:emoodie/src/core/utils/constants.dart' as st;
 import 'package:emoodie/src/presentation/screens/home/components/library.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum ViewTypes { albums, artists }
 
@@ -58,8 +57,8 @@ class _SpotifyEmoodieHomeState extends State<SpotifyEmoodieHome> {
     EasyDebounce.debounce(_inputDebounceId, const Duration(milliseconds: 500),
         () {
       _selectedView == ViewTypes.albums
-          ? albumsCubit.executeSearch(q: userSearch!)
-          : artitsCubit.executeSearch(q: userSearch!);
+          ? albumsCubit.executeSearch(q: userSearch ?? "")
+          : artitsCubit.executeSearch(q: userSearch ?? "");
     });
   }
 
