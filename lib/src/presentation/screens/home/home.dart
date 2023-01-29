@@ -13,16 +13,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum ViewTypes { albums, artists }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({
+class SpotifyEmoodieHome extends StatefulWidget {
+  const SpotifyEmoodieHome({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<SpotifyEmoodieHome> createState() => _SpotifyEmoodieHomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _SpotifyEmoodieHomeState extends State<SpotifyEmoodieHome> {
   final _inputDebounceId = 'input-debounce';
   String? _albumsViewCurrentSearch;
   String? _artistsViewCurrentSearch;
