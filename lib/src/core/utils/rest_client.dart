@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:emoodie/src/utils/exceptions.dart';
+import 'package:emoodie/src/core/utils/exceptions.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:http/http.dart';
 

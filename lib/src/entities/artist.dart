@@ -1,6 +1,6 @@
-import 'package:emoodie/src/entities/iterable_entity_interface.dart';
+import 'package:emoodie/src/core/utils/iterable_entity_interface.dart';
 import 'package:emoodie/src/entities/thumnail.dart';
-import 'package:emoodie/src/utils/constants.dart' as st;
+import 'package:emoodie/src/core/utils/constants.dart' as st;
 
 class ArtistEntity implements IterableEntity {
   ArtistEntity();
